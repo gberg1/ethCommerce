@@ -7,7 +7,7 @@ contract ethCommerce {
   string description;
   uint256 price;
 
-  // Events
+  // events
   event sellArticleEvent(address indexed _seller, string _name, uint256 _price);
 
   // sell an article

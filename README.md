@@ -43,3 +43,17 @@ If at any point you want to run the test suite for the ethCommerce smart contrac
 To start the truffle console run:
 
 `truffle console`
+
+***********************************
+
+Note eventually you will not want to use a test ethereum node anymore and will want to use a private ethereum node for a variety of reasons.
+
+You may run into a permission error when you run the truffle test command because by default all accounts in a testrpc environment are unlocked,
+where as when you move onto a private ethereum node the accounts you want to interact with for your smart contract may be locked by default.
+When your private ethereum node you are running to test with (not testrpc) is running open a new terminal tab and run:
+
+`geth attach`
+
+`personal.unlockAccount(INSERT_ACCOUNT_NAME, INSERT_PASSWORD, 3600)`
+
+Then try running the truffle test command again in a separate tab to run your test suite and that should work successfully (assuming your code isn't broken of course!)

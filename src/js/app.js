@@ -40,6 +40,7 @@ App = {
     $.getJSON('ethCommerce.json', function(ethCommerceArtifact) {
       App.contracts.ethCommerce = TruffleContract(ethCommerceArtifact);
       App.contracts.ethCommerce.setProvider(App.web3Provider);
+      App.listenToEvents();
       return App.reloadArticles();
     });
   },
@@ -93,9 +94,21 @@ App = {
         gas: 500000
       });
     }).then(function(result) {
-      App.reloadArticles();
+      App.reloadArticles()
     }).catch(function(err) {
       console.error(err);
+    });
+  },
+
+  listenToEvents: function() {
+    App.contracts.ethCommerce.deployed().then(function(instance) {
+      instance.sellArticleEvent({}, {
+        fromBlock: 0,
+        toBlock: 'latest'
+      }).watch(function(error, event) {
+        $("#events").append('<li class="list-group-item">' + event.args._name + ' is for sale' + '</li>');
+        App.reloadArticles();
+      });
     });
   },
 
