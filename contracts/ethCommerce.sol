@@ -7,10 +7,8 @@ contract ethCommerce {
   string description;
   uint256 price;
 
-  // constructor
-  function ethCommerce() {
-    sellArticle('Default article', 'This is an article set by default', 1000000000000000000);
-  }
+  // Events
+  event sellArticleEvent(address indexed _seller, string _name, uint256 _price);
 
   // sell an article
   function sellArticle(string _name, string _description, uint256 _price) public {
@@ -18,6 +16,7 @@ contract ethCommerce {
     name = _name;
     description = _description;
     price = _price;
+    sellArticleEvent(seller, name, price);
   }
 
   // get an article
