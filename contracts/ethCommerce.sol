@@ -17,7 +17,7 @@ contract ethCommerce {
 
   event buyArticleEvent (
     address indexed _seller,
-    address indexed_buyer,
+    address indexed _buyer,
     string _name,
     uint256 _price
   );
