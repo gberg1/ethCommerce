@@ -18,6 +18,15 @@ Next run the script via:
 
 ***********************************
 
+To run the test suite for the smart contract use:
+
+`truffle test`
+
+Each time a test suite is started truffle deploys the latest version of the smart contract to the Ethereum network. In our case our private Ethereum node.
+If you have several test suites truffle will re-deploy the contract for each of them. This means that if you have several test suites, truffle will re-deploy the contract for each of them. Each test suite gets a unique contract address and starts with a fresh contract state. Keep in mind running a test suite will cost some gas for the deployment pf the contract and to any function call that is non-free (alter the contract state).
+
+***********************************
+
 To start the truffle console run:
 
 `truffle console`
@@ -118,12 +127,3 @@ Next, run:
 `npm run dev`
 
 This will launch our web app in the browser using lite-server.
-
-*********************************
-
-If at any point you want to run the test suite for the smart contract use:
-
-`truffle test`
-
-Each time a test suite is started truffle deploys the latest version of the smart contract to the Ethereum network. In our case our private Ethereum node.
-If you have several test suites truffle will re-deploy the contract for each of them. This means that if you have several test suites, truffle will re-deploy the contract for each of them. Each test suite gets a unique contract address and starts with a fresh contract state. Keep in mind running a test suite will cost some gas for the deployment pf the contract and to any function call that is non-free (alter the contract state).
