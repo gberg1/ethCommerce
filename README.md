@@ -80,13 +80,25 @@ Sell an article:
 
 `app.sellArticle('INSERT_ARTICLE_NAME', 'INSERT_ARTICLE_DESCRIPTION', web3.toWei(INSERT_PRICE, 'ether'), {from: web3.eth.accounts[INSERT_INDEX]})`
 
-Watch the buy article event to be notified if an article is sold Only watch for articles sold by our seller:
+Watch the buy article event to be notified if an article is sold. Only watch for articles sold by our seller:
 
 `var buyEvent = app.buyArticleEvent({_seller: web3.eth.accounts[INSERT_INDEX]}, {fromBlack: 0, toBlock: 'latest'}).watch(function(error, event) {console.log(event);})`
 
+Watch the sell article event:
+
+`var sellEvent = app.sellArticleEvent({_seller: web3.eth.accounts[INSERT_INDEX]}, {fromBlack: 0, toBlock: 'latest'}).watch(function(error, event) {console.log(event);})`
+
+Get an article via generated getter:
+
+`app.articles(INSERT_ARTICLE_ID)`
+
+Get all articles for sale:
+
+`app.getArticlesForSale()`
+
 Purchase an article:
 
-`app.buyArticle({from: web3.eth.accounts[INSERT_INDEX], value: web3.toWei(INSERT_PRICE, 'ether')})`
+`app.buyArticle(INSERT_ARTICLE_ID, {from: web3.eth.accounts[INSERT_INDEX], value: web3.toWei(INSERT_PRICE, 'ether')})`
 
 In order to restart your Ethereum node execute the following commands.
 
