@@ -1,6 +1,10 @@
 pragma solidity ^0.4.11;
 
-contract ethCommerce {
+import './Owned.sol';
+
+contract ethCommerce is Owned {
+  // Parent contract constructor called automatically if no constructor exists
+
   struct Article {
     uint id;
     address seller;
@@ -12,7 +16,6 @@ contract ethCommerce {
 
   mapping(uint => Article) public articles;
   uint articleCounter;
-  address owner;
 
   event sellArticleEvent (
     uint indexed _id,
@@ -28,12 +31,6 @@ contract ethCommerce {
     string _name,
     uint256 _price
   );
-
-  modifier onlyOwner() {
-    require(msg.sender == owner);
-    // For any consumer of onlyOwner modifier _; will be replaced with the body block of the consuming function
-    _;
-  }
 
   function ethCommerce() {
     owner = msg.sender;

@@ -62,7 +62,9 @@ Deploy contract to private Ethereum node for first time. New tab:
 
 **********************************
 
-Note its important to have downloaded the Metamask chrome extension prior to using this app in the browser as it is necessary to interact with the smart contract to buy and sell articles. You will want to make sure you are not using the main Ethereum network in Metamask and will want to change the current node you're using to the Localhost 8545 option. Also each time you run npm run dev sometimes Metamask can hang so if you sense something isn't right try changing to the Main network and then back to the Localhost 8545 network.
+Note its important to have downloaded the Metamask chrome extension prior to using this app in the browser as it is necessary to interact with the smart contract to buy and sell articles. You will want to make sure you are not using the main Ethereum network in Metamask.
+
+Each time you launch the app via the npm run dev command you will want to change the Metamask Ethereum network to the Main network and then back to Localhost 8545 to refresh Metamask so it will work as expected. Just make sure when you are interacting with the app you are on the private network Localhost 8545 and NOT the Main Ethereum network so you ensure you are playing around with "fake" Ether.
 
 To open the UI part of the application run the following command:
 
