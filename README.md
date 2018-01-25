@@ -60,7 +60,19 @@ Deploy contract to private Ethereum node for first time. New tab:
 *Note if you have already ran truffle migrate to your contract and have existing changes you will need to run:*
 `truffle migrate --reset`
 
-Open truffle console:
+**********************************
+
+Note its important to have downloaded the Metamask chrome extension prior to using this app in the browser as it is necessary to interact with the smart contract to buy and sell articles. You will want to make sure you are not using the main Ethereum network in Metamask and will want to change the current node you're using to the Localhost 8545 option. Also each time you run npm run dev sometimes Metamask can hang so if you sense something isn't right try changing to the Main network and then back to the Localhost 8545 network.
+
+To open the UI part of the application run the following command:
+
+`npm run dev`
+
+Then navigate to localhost:3000 in your favorite web browser.
+
+**********************************
+
+To open the truffle console:
 
 `truffle console`
 
@@ -134,8 +146,12 @@ Note that if we have already deployed the contract and we make changes to the co
 
 `truffle migrate --reset`
 
-Next, run:
+*********************************
 
-`npm run dev`
+To deactivate the smart contract from the Ethereum node launch the truffle console and after deploying an instance of the smart contract use:
 
-This will launch our web app in the browser using lite-server.
+`app.kill({from: web3.eth.accounts[INSERT_SMART_CONTRACT_OWNER]})`
+
+Note that in order to deactivate the contract you must use the account that deployed the smart contract in the first place or you will get an error. This is on purpose to avoid hackers being able to shut down your smart contract without your consent!
+
+Also note that if you send value to a smart contract, in our case buy an article, even after it has been deactivated, your Ether will be stored in the smart contract and taken from the account you send it from so be careful not to send Ether to a deactivated smart contract or you will lose it.

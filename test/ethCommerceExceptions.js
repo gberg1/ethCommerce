@@ -10,16 +10,6 @@ contract('ethCommerce', function(accounts) {
   var articleDescription = 'Description for article 1';
   var articlePrice = 10;
 
-  it('should throw an exception if you try to get articles for sale when there is no article at all', function() {
-    return ethCommerce.deployed().then(function(instance) {
-        ethCommerceInstance = instance;
-        return ethCommerceInstance.getArticlesForSale();
-      }).then(assert.fail)
-      .catch(function(error) {
-        assert(error.message.indexOf('invalid opcode') >= 0, 'error message must contain invalid opcode');
-      })
-  });
-
   it('should throw an exception if you try to buy an article when there is no article for sale', function() {
     return ethCommerce.deployed().then(function(instance) {
         ethCommerceInstance = instance;

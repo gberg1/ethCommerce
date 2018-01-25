@@ -2,18 +2,19 @@ App = {
   web3Provider: null,
   contracts: {},
   account: 0x0,
+  loading: false,
 
   init: function() {
     return App.initWeb3();
   },
 
   initWeb3: function() {
-    // Initialize web3 and set the provider to the testRPC.
+    // Initialize web3 and set the provider
     if (typeof web3 !== 'undefined') {
       App.web3Provider = web3.currentProvider;
       web3 = new Web3(web3.currentProvider);
     } else {
-      // set the provider you want from Web3.providers
+      // Set the provider from Web3.providers
       App.web3Provider = new Web3.providers.HttpProvider('http://localhost:8545');
       web3 = new Web3(App.web3Provider);
     }
@@ -25,10 +26,10 @@ App = {
     web3.eth.getCoinbase(function(err, account) {
       if (err === null) {
         App.account = account;
-        $("#account").text(account);
+        $('#account').text(account);
         web3.eth.getBalance(account, function(err, balance) {
           if (err === null) {
-            $("#accountBalance").text(web3.fromWei(balance, "ether") + " ETH");
+            $('#accountBalance').text(web3.fromWei(balance, 'ether') + ' ETH');
           }
         });
       }
@@ -37,10 +38,10 @@ App = {
 
   initContract: function() {
     $.getJSON('ethCommerce.json', function(ethCommerceArtifact) {
-      // Get the necessary contract artifact file and use it to instantiate a truffle contract abstraction.
+      // Get the necessary contract artifact file and use it to instantiate a truffle contract abstraction
       App.contracts.ethCommerce = TruffleContract(ethCommerceArtifact);
 
-      // Set the provider for our contract.
+      // Set the contract provider
       App.contracts.ethCommerce.setProvider(App.web3Provider);
 
       // Listen for events
@@ -52,65 +53,76 @@ App = {
   },
 
   reloadArticles: function() {
-    // refresh account information because the balance may have changed
+    // Avoid re-entry
+    if (App.loading) {
+      return;
+    }
+    App.loading = true;
+
+    // Refresh account information because the balance may have changed
     App.displayAccountInfo();
 
-    App.contracts.ethCommerce.deployed().then(function(instance) {
-      return instance.getArticle.call();
-    }).then(function(article) {
-      if (article[0] == 0x0) {
-        // no article
-        return;
-      }
+    var ethCommerceInstance;
 
+    App.contracts.ethCommerce.deployed().then(function(instance) {
+      ethCommerceInstance = instance;
+      return ethCommerceInstance.getArticlesForSale();
+    }).then(function(articleIds) {
       // Retrieve and clear the article placeholder
       var articlesRow = $('#articlesRow');
       articlesRow.empty();
 
-      var price = web3.fromWei(article[4], "ether");
-
-      // Retrieve and fill the article template
-      var articleTemplate = $('#articleTemplate');
-      articleTemplate.find('.panel-title').text(article[2]);
-      articleTemplate.find('.article-description').text(article[3]);
-      articleTemplate.find('.article-price').text(price);
-      articleTemplate.find('.btn-buy').attr('data-value', price);
-
-      // seller
-      var seller = article[0];
-      if (seller == App.account) {
-        seller = "You";
+      for (var i = 0; i < articleIds.length; i++) {
+        var articleId = articleIds[i];
+        ethCommerceInstance.articles(articleId).then(function(article) {
+          App.displayArticle(
+            // Id, Seller, Name, Description, Price
+            article[0],
+            article[1],
+            article[3],
+            article[4],
+            article[5]
+          );
+        });
       }
-      articleTemplate.find('.article-seller').text(seller);
-
-      // buyer
-      var buyer = article[1];
-      if (buyer == App.account) {
-        buyer = "You";
-      } else if (buyer == 0x0) {
-        buyer = "No one yet";
-      }
-      articleTemplate.find('.article-buyer').text(buyer);
-
-      if (article[0] == App.account || article[1] != 0x0) {
-        articleTemplate.find('.btn-buy').hide();
-      }
-
-      // add this new article
-      articlesRow.append(articleTemplate.html());
+      App.loading = false;
     }).catch(function(err) {
       console.log(err.message);
+      App.loading = false;
     });
   },
 
+  displayArticle: function(id, seller, name, description, price) {
+    // Retrieve the article placeholder
+    var articlesRow = $('#articlesRow');
+
+    var etherPrice = web3.fromWei(price, 'ether');
+
+    // Retrieve and fill the article template
+    var articleTemplate = $('#articleTemplate');
+    articleTemplate.find('.panel-title').text(name);
+    articleTemplate.find('.article-description').text(description);
+    articleTemplate.find('.article-price').text(etherPrice + ' ETH');
+    articleTemplate.find('.btn-buy').attr('data-id', id);
+    articleTemplate.find('.btn-buy').attr('data-value', etherPrice);
+
+    if (seller == App.account) {
+      articleTemplate.find('.article-seller').text('You');
+      articleTemplate.find('.btn-buy').hide();
+    } else {
+      articleTemplate.find('.article-seller').text(seller);
+      articleTemplate.find('.btn-buy').show();
+    }
+
+    articlesRow.append(articleTemplate.html());
+  },
+
   sellArticle: function() {
-    // retrieve details of the article
-    var _article_name = $("#article_name").val();
-    var _description = $("#article_description").val();
-    var _price = web3.toWei(parseInt($("#article_price").val() || 0), "ether");
+    var _article_name = $('#article_name').val();
+    var _description = $('#article_description').val();
+    var _price = web3.toWei(parseFloat($('#article_price').val() || 0), 'ether');
 
     if ((_article_name.trim() == '') || (_price == 0)) {
-      // nothing to sell
       return false;
     }
 
@@ -133,7 +145,7 @@ App = {
         fromBlock: 0,
         toBlock: 'latest'
       }).watch(function(error, event) {
-        $("#events").append('<li class="list-group-item">' + event.args._name + ' is for sale' + '</li>');
+        $('#events').append('<li class="list-group-item">' + event.args._name + ' is for sale' + '</li>');
         App.reloadArticles();
       });
 
@@ -141,7 +153,7 @@ App = {
         fromBlock: 0,
         toBlock: 'latest'
       }).watch(function(error, event) {
-        $("#events").append('<li class="list-group-item">' + event.args._buyer + ' bought ' + event.args._name + '</li>');
+        $('#events').append('<li class="list-group-item">' + event.args._buyer + ' bought ' + event.args._name + '</li>');
         App.reloadArticles();
       });
     });
@@ -150,13 +162,14 @@ App = {
   buyArticle: function() {
     event.preventDefault();
 
-    // retrieve the article price
-    var _price = parseInt($(event.target).data('value'));
+    // Retrieve article price
+    var _articleId = $(event.target).data('id');
+    var _price = parseFloat($(event.target).data('value'));
 
     App.contracts.ethCommerce.deployed().then(function(instance) {
-      return instance.buyArticle({
+      return instance.buyArticle(_articleId, {
         from: App.account,
-        value: web3.toWei(_price, "ether"),
+        value: web3.toWei(_price, 'ether'),
         gas: 500000
       });
     }).then(function(result) {

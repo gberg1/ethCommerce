@@ -22,9 +22,13 @@ contract('ethCommerce', function(accounts) {
 
 	it('should be initialized with empty values', function() {
     return ethCommerce.deployed().then(function(instance) {
-      return instance.getNumberOfArticles();
+      ethCommerceInstance = instance;
+      return ethCommerceInstance.getNumberOfArticles();
     }).then(function(data) {
       assert.equal(data, 0x0, 'number of articles must be zero');
+      return ethCommerceInstance.getArticlesForSale();
+    }).then(function(data){
+      assert.equal(data.length, 0, 'articles for sale should be empty');
     });
   });
 

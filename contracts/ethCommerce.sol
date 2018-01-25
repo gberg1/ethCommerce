@@ -12,6 +12,7 @@ contract ethCommerce {
 
   mapping(uint => Article) public articles;
   uint articleCounter;
+  address owner;
 
   event sellArticleEvent (
     uint indexed _id,
@@ -27,6 +28,10 @@ contract ethCommerce {
     string _name,
     uint256 _price
   );
+
+  function ethCommerce() {
+    owner = msg.sender;
+  }
 
   function sellArticle(string _name, string _description, uint256 _price) public {
     articleCounter++;
@@ -46,7 +51,10 @@ contract ethCommerce {
   }
 
   function getArticlesForSale() public constant returns (uint[]) {
-    require(articleCounter > 0);
+    if (articleCounter == 0) {
+      // Return uint array with zero elements in it
+      return new uint[](0);
+    }
     uint[] memory articleIds = new uint[](articleCounter);
     uint numberOfArticlesForSale = 0;
 
@@ -81,6 +89,12 @@ contract ethCommerce {
     article.buyer = msg.sender;
     article.seller.transfer(msg.value);
     buyArticleEvent(_id, article.seller, article.buyer, article.name, article.price);
+  }
+
+  function kill() {
+    require(msg.sender == owner);
+    // Will refund all remaining funds in the smart contract to owner's account
+    selfdestruct(owner);
   }
 
 }
