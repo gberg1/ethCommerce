@@ -29,6 +29,12 @@ contract ethCommerce {
     uint256 _price
   );
 
+  modifier onlyOwner() {
+    require(msg.sender == owner);
+    // For any consumer of onlyOwner modifier _; will be replaced with the body block of the consuming function
+    _;
+  }
+
   function ethCommerce() {
     owner = msg.sender;
   }
@@ -91,8 +97,7 @@ contract ethCommerce {
     buyArticleEvent(_id, article.seller, article.buyer, article.name, article.price);
   }
 
-  function kill() {
-    require(msg.sender == owner);
+  function kill() onlyOwner {
     // Will refund all remaining funds in the smart contract to owner's account
     selfdestruct(owner);
   }

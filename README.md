@@ -150,7 +150,7 @@ Note that if we have already deployed the contract and we make changes to the co
 
 To deactivate the smart contract from the Ethereum node launch the truffle console and after deploying an instance of the smart contract use:
 
-`app.kill({from: web3.eth.accounts[INSERT_SMART_CONTRACT_OWNER]})`
+`app.kill({from: web3.eth.accounts[INSERT_SMART_CONTRACT_OWNER_INDEX]})`
 
 Note that in order to deactivate the contract you must use the account that deployed the smart contract in the first place or you will get an error. This is on purpose to avoid hackers being able to shut down your smart contract without your consent!
 
