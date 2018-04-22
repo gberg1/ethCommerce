@@ -1,8 +1,8 @@
-pragma solidity ^0.4.11;
+pragma solidity ^0.4.23;
 
 import './Owned.sol';
 
-contract ethCommerce is Owned {
+contract EthCommerce is Owned {
   // Parent contract constructor called automatically if no constructor exists
 
   struct Article {
@@ -32,7 +32,7 @@ contract ethCommerce is Owned {
     uint256 _price
   );
 
-  function ethCommerce() {
+  function EthCommerce() {
     owner = msg.sender;
   }
 

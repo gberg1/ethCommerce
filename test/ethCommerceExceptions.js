@@ -1,7 +1,7 @@
-var ethCommerce = artifacts.require('./ethCommerce.sol');
+var EthCommerce = artifacts.require('./EthCommerce.sol');
 
 // Test suite
-contract('ethCommerce', function(accounts) {
+contract('EthCommerce', function(accounts) {
   var ethCommerceInstance;
   var seller = accounts[1];
   var buyer = accounts[2];
@@ -11,7 +11,7 @@ contract('ethCommerce', function(accounts) {
   var articlePrice = 10;
 
   it('should throw an exception if you try to buy an article when there is no article for sale', function() {
-    return ethCommerce.deployed().then(function(instance) {
+    return EthCommerce.deployed().then(function(instance) {
         ethCommerceInstance = instance;
         return ethCommerceInstance.buyArticle(articleId, {
           from: buyer,
@@ -29,7 +29,7 @@ contract('ethCommerce', function(accounts) {
   });
 
   it('should throw an exception if you try to buy an article that does not exist', function() {
-    return ethCommerce.deployed().then(function(instance) {
+    return EthCommerce.deployed().then(function(instance) {
         ethCommerceInstance = instance;
         return ethCommerceInstance.sellArticle(articleName, articleDescription, web3.toWei(articlePrice, 'ether'), {
           from: seller
@@ -56,7 +56,7 @@ contract('ethCommerce', function(accounts) {
   });
 
   it('should throw an exception if you try to buy your own article', function() {
-    return ethCommerce.deployed().then(function(instance) {
+    return EthCommerce.deployed().then(function(instance) {
         ethCommerceInstance = instance;
         // Already called sellArticle method on same articleId with same seller in previous test
         return ethCommerceInstance.buyArticle(articleId, {
@@ -80,7 +80,7 @@ contract('ethCommerce', function(accounts) {
   });
 
   it('should throw an exception if you try to buy an article for a value different from its price', function() {
-    return ethCommerce.deployed().then(function(instance) {
+    return EthCommerce.deployed().then(function(instance) {
         ethCommerceInstance = instance;
         return ethCommerceInstance.buyArticle(articleId, {
           from: buyer,
@@ -103,7 +103,7 @@ contract('ethCommerce', function(accounts) {
   });
 
   it('should throw an exception if you try to buy an article that has already been sold', function() {
-    return ethCommerce.deployed().then(function(instance) {
+    return EthCommerce.deployed().then(function(instance) {
         ethCommerceInstance = instance;
         return ethCommerceInstance.buyArticle(articleId, {
           from: buyer,

@@ -1,5 +1,5 @@
-var ethCommerce = artifacts.require('./ethCommerce.sol');
+var EthCommerce = artifacts.require('./EthCommerce.sol');
 
 module.exports = function(deployer) {
-  deployer.deploy(ethCommerce);
+  deployer.deploy(EthCommerce);
 }

@@ -2,7 +2,13 @@ ethCommerce
 
 An Ethereum smart contract ecommerce marketplace application.
 
-To get started pull down the code from github ethCommerce repo and run:
+The code for the smart contract is written in Solidity using the Truffle development framework and can be found under the contracts directory with a majority of the logic in ethCommerce.sol.
+
+The test suite for the smart contract is written in Javascript using Mocha and Chai. It can be found under the test directory where both success and exception cases are tested.
+
+**********************************
+
+To get started with this repository pull down the code from https://github.com/gberg1/ethCommerce and run:
 
 `npm install`
 
@@ -23,7 +29,8 @@ To run the test suite for the smart contract use:
 `truffle test`
 
 Each time a test suite is started truffle deploys the latest version of the smart contract to the Ethereum network. In our case our private Ethereum node.
-If you have several test suites truffle will re-deploy the contract for each of them. This means that if you have several test suites, truffle will re-deploy the contract for each of them. Each test suite gets a unique contract address and starts with a fresh contract state. Keep in mind running a test suite will cost some gas for the deployment pf the contract and to any function call that is non-free (alter the contract state).
+
+If you have several test suites truffle will re-deploy the contract for each of them. Each test suite gets a unique contract address and starts with a fresh contract state. Keep in mind running a test suite will cost some gas for the deployment of the contract and to any function call that is non-free (alter the contract state).
 
 ***********************************
 
@@ -33,27 +40,26 @@ To start the truffle console run:
 
 ***********************************
 
-Note eventually you will not want to use a test ethereum node anymore and will want to use a private ethereum node for a variety of reasons.
-
-You may run into a permission error when you run the truffle test command because by default all accounts in a testrpc environment are unlocked,
-where as when you move onto a private ethereum node the accounts you want to interact with for your smart contract may be locked by default.
-When your private ethereum node you are running to test with (not testrpc) is running open a new terminal tab and run:
+geth is the the command line interface for running a full ethereum node implemented in Go. We will use geth to run our private Ethereum node:
 
 `geth attach`
 
 `personal.unlockAccount(INSERT_ACCOUNT_NAME, INSERT_PASSWORD, 3600)`
 
-Then try running the truffle test command again in a separate tab to run your test suite and that should work successfully (assuming your code isn't broken of course!)
+Then try running the truffle test command again in a separate tab to run your test suite.
+
+Documentation on geth can be found here:
+https://github.com/ethereum/go-ethereum/wiki/geth
 
 ***********************************
 
-Deploying your contract on a private Ethereum node
+To deploy the contract onto our private ethereum node run:
 
 Start:
 
 `./starttestrpc.sh`
 
-Deploy contract to private Ethereum node for first time. New tab:
+Open a new tab and run:
 
 `truffle migrate`
 
@@ -62,15 +68,11 @@ Deploy contract to private Ethereum node for first time. New tab:
 
 **********************************
 
-Note its important to have downloaded the Metamask chrome extension prior to using this app in the browser as it is necessary to interact with the smart contract to buy and sell articles. You will want to make sure you are not using the main Ethereum network in Metamask.
-
-Each time you launch the app via the npm run dev command you will want to change the Metamask Ethereum network to the Main network and then back to Localhost 8545 to refresh Metamask so it will work as expected. Just make sure when you are interacting with the app you are on the private network Localhost 8545 and NOT the Main Ethereum network so you ensure you are playing around with "fake" Ether.
-
-To open the UI part of the application run the following command:
+To open the UI part of the application on localhost run the following command:
 
 `npm run dev`
 
-Then navigate to localhost:3000 in your favorite web browser.
+Then navigate to localhost:3000 in your favorite web browser. Note you will need to have the Metamask chrome extension set up.
 
 **********************************
 
@@ -136,7 +138,7 @@ To test if our logic holds true lets send not enough ether to cover the price of
 
 *********************************
 
-When we use Metamask to iteract with our smart contract in the browser this will avoid us creating a new account every time we restart our server.
+When we use Metamask to interact with our smart contract in the browser this will avoid us creating a new account every time we restart our server.
 
 Next, in a new tab run:
 
@@ -157,3 +159,15 @@ To deactivate the smart contract from the Ethereum node launch the truffle conso
 Note that in order to deactivate the contract you must use the account that deployed the smart contract in the first place or you will get an error. This is on purpose to avoid hackers being able to shut down your smart contract without your consent!
 
 Also note that if you send value to a smart contract, in our case buy an article, even after it has been deactivated, your Ether will be stored in the smart contract and taken from the account you send it from so be careful not to send Ether to a deactivated smart contract or you will lose it.
+
+*********************************
+
+To deploy the static frontend of the app use:
+
+`./starttestrpc.sh`
+
+`truffle migrate`
+
+`chmod a+x deployfrontend.sh`
+
+`./deployfrontend.sh`

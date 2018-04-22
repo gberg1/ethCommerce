@@ -1,12 +1,12 @@
 // Contract to be tested
-var ethCommerce = artifacts.require('./ethCommerce.sol');
+var EthCommerce = artifacts.require('./EthCommerce.sol');
 
 // Test suite
 
 // Tests are run in sequence
 // Smart contract state is not reset between tests
 
-contract('ethCommerce', function(accounts) {
+contract('EthCommerce', function(accounts) {
   var ethCommerceInstance;
   var seller = accounts[1];
   var buyer = accounts[2];
@@ -21,7 +21,7 @@ contract('ethCommerce', function(accounts) {
   var buyerBalanceBeforeBuy, buyerBalanceAfterBuy;
 
 	it('should be initialized with empty values', function() {
-    return ethCommerce.deployed().then(function(instance) {
+    return EthCommerce.deployed().then(function(instance) {
       ethCommerceInstance = instance;
       return ethCommerceInstance.getNumberOfArticles();
     }).then(function(data) {
@@ -33,7 +33,7 @@ contract('ethCommerce', function(accounts) {
   });
 
 	it('should sell a first article', function() {
-    return ethCommerce.deployed().then(function(instance) {
+    return EthCommerce.deployed().then(function(instance) {
       ethCommerceInstance = instance;
       return ethCommerceInstance.sellArticle(articleName1, articleDescription1, web3.toWei(articlePrice1, 'ether'), {
         from: seller
@@ -69,7 +69,7 @@ contract('ethCommerce', function(accounts) {
   });
 
 	it('should sell a second article', function() {
-    return ethCommerce.deployed().then(function(instance) {
+    return EthCommerce.deployed().then(function(instance) {
       ethCommerceInstance = instance;
       return ethCommerceInstance.sellArticle(articleName2, articleDescription2, web3.toWei(articlePrice2, 'ether'), {
         from: seller
@@ -110,7 +110,7 @@ contract('ethCommerce', function(accounts) {
 		// 3, Effects of the buy article function on contract state
 		// *Note requires previous presence of sellArticle call as it depends on the presence of an article to sell
 		it('should buy the first article', function() {
-	    return ethCommerce.deployed().then(function(instance) {
+	    return EthCommerce.deployed().then(function(instance) {
 	      ethCommerceInstance = instance;
 	      articleId = 1;
 
